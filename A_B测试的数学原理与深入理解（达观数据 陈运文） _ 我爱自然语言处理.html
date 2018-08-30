@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<!-- saved from url=(0027)http://www.52nlp.cn/abceshi -->
+<html lang="zh-CN"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width">
+<title>A/B测试的数学原理与深入理解（达观数据 陈运文） | 我爱自然语言处理</title>
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="http://www.52nlp.cn/xmlrpc.php">
+<!--[if lt IE 9]>
+<script src="http://www.52nlp.cn/wp-content/themes/twentytwelve/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+<link rel="dns-prefetch" href="http://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="我爱自然语言处理 » Feed" href="http://www.52nlp.cn/feed">
+<link rel="alternate" type="application/rss+xml" title="我爱自然语言处理 » 评论Feed" href="http://www.52nlp.cn/comments/feed">
+<link rel="alternate" type="application/rss+xml" title="我爱自然语言处理 » A/B测试的数学原理与深入理解（达观数据 陈运文）评论Feed" href="http://www.52nlp.cn/abceshi/feed">
+		<script type="text/javascript" async="" defer="" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/piwik.js.下载"></script><script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.4\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.4\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/www.52nlp.cn\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.6"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55357,56692,8205,9792,65039],[55357,56692,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/wp-emoji-release.min.js.下载" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="yarppWidgetCss-css" href="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/widget.css" type="text/css" media="all">
+<link rel="stylesheet" id="wp-syntax-css-css" href="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/wp-syntax.css" type="text/css" media="all">
+<link rel="stylesheet" id="twentytwelve-style-css" href="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/style.css" type="text/css" media="all">
+<!--[if lt IE 9]>
+<link rel='stylesheet' id='twentytwelve-ie-css'  href='http://www.52nlp.cn/wp-content/themes/twentytwelve/css/ie.css?ver=20121010' type='text/css' media='all' />
+<![endif]-->
+<script type="text/javascript" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/jquery.js.下载"></script>
+<script type="text/javascript" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/jquery-migrate.min.js.下载"></script>
+<link rel="https://api.w.org/" href="http://www.52nlp.cn/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.52nlp.cn/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.52nlp.cn/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="Andrew Ng 深度学习公开课系列第五门课程序列模型开课" href="http://www.52nlp.cn/andrew-ng-%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0%e5%85%ac%e5%bc%80%e8%af%be%e7%b3%bb%e5%88%97%e7%ac%ac%e4%ba%94%e9%97%a8%e8%af%be%e7%a8%8b%e5%ba%8f%e5%88%97%e6%a8%a1%e5%9e%8b%e5%bc%80%e8%af%be">
+<link rel="next" title="Coursera上数据结构 &amp; 算法课程（公开课）汇总推荐" href="http://www.52nlp.cn/coursera%e4%b8%8a%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84-%e7%ae%97%e6%b3%95%e8%af%be%e7%a8%8b-%e7%ae%97%e6%b3%95%e5%85%ac%e5%bc%80%e8%af%be-%e6%b1%87%e6%80%bb%e6%8e%a8%e8%8d%90">
+<meta name="generator" content="WordPress 4.9.6">
+<link rel="canonical" href="http://www.52nlp.cn/abceshi">
+<link rel="shortlink" href="http://www.52nlp.cn/?p=10132">
+<link rel="alternate" type="application/json+oembed" href="http://www.52nlp.cn/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.52nlp.cn%2Fabceshi">
+<link rel="alternate" type="text/xml+oembed" href="http://www.52nlp.cn/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.52nlp.cn%2Fabceshi&amp;format=xml">
+<!-- wp thread comment 1.4.9.4.002 -->
+<style type="text/css" media="screen">
+.editComment, .editableComment, .textComment{
+	display: inline;
+}
+.comment-childs{
+	border: 1px solid #999;
+	margin: 5px 2px 2px 4px;
+	padding: 4px 2px 2px 4px;
+	background-color: white;
+}
+.comment-childs > p {
+        word-break: break-word;
+        word-wrap: break-word;
+}
+.chalt{
+	background-color: #E2E2E2;
+}
+#newcomment{
+	border:1px dashed #777;width:90%;
+}
+#newcommentsubmit{
+	color:red;
+}
+.adminreplycomment{
+	border:1px dashed #777;
+	width:99%;
+	margin:4px;
+	padding:4px;
+}
+.mvccls{
+	color: #999;
+}
+			
+</style>
+</head>
+
+<body class="post-template-default single single-post postid-10132 single-format-standard">
+<div id="page" class="hfeed site">
+	<header id="masthead" class="site-header" role="banner">
+		<hgroup>
+			<h1 class="site-title"><a href="http://www.52nlp.cn/" title="我爱自然语言处理" rel="home">我爱自然语言处理</a></h1>
+			<h2 class="site-description">I Love Natural Language Processing</h2>
+		</hgroup>
+
+		<nav id="site-navigation" class="main-navigation" role="navigation">
+			<button class="menu-toggle">菜单</button>
+			<a class="assistive-text" href="http://www.52nlp.cn/abceshi#content" title="跳至内容">跳至内容</a>
+			<div class="nav-menu"><ul>
+<li><a href="http://www.52nlp.cn/">首页</a></li><li class="page_item page-item-9840"><a href="http://www.52nlp.cn/%e8%af%be%e7%a8%8b">公开课</a></li>
+<li class="page_item page-item-9088"><a href="http://www.52nlp.cn/%e4%b9%a6%e7%b1%8d">书籍</a></li>
+<li class="page_item page-item-9435"><a href="http://coursegraph.com/" target="_blank">课程图谱</a></li>
+<li class="page_item page-item-9432"><a href="http://www.nlpjob.com/" target="_blank">招聘求职</a></li>
+<li class="page_item page-item-2557 page_item_has_children"><a href="http://www.52nlp.cn/resources">资源</a>
+<ul class="children">
+	<li class="page_item page-item-1271"><a href="http://www.52nlp.cn/resources/wpmatheditor">WpMathEditor</a></li>
+</ul>
+</li>
+<li class="page_item page-item-2"><a href="http://www.52nlp.cn/about">关于</a></li>
+<li class="page_item page-item-9013"><a href="http://weibo.com/52nlp" target="_blank">微博</a></li>
+</ul></div>
+		</nav><!-- #site-navigation -->
+
+			</header><!-- #masthead -->
+
+	<div id="main" class="wrapper">
+
+	<div id="primary" class="site-content">
+		<div id="content" role="main">
+
+			
+				
+	<article id="post-10132" class="post-10132 post type-post status-publish format-standard hentry category-354 category-538 tag-a-b tag-1477 tag-1244 tag-970">
+				<header class="entry-header">
+			
+						<h1 class="entry-title">A/B测试的数学原理与深入理解（达观数据 陈运文）</h1>
+										<div class="comments-link">
+					<a href="http://www.52nlp.cn/abceshi#comments">1条回复</a>				</div><!-- .comments-link -->
+					</header><!-- .entry-header -->
+
+				<div class="entry-content">
+			<div class="code-block code-block-1" style="margin: 8px auto; text-align: center; clear: both;">
+<a href="https://click.linksynergy.com/fs-bin/click?id=9IqCvd3EEQc&amp;offerid=467035.416&amp;subid=0&amp;type=4"><img border="0" alt="Deep Learning Specialization on Coursera" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/show"></a></div>
+<section style="font-size: 16px;text-align: left">
+<p style="margin-left: 8px;margin-right: 8px"><img class="aligncenter wp-image-10133" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/AB测试题图-1024x568.jpg" alt="" width="593" height="328" srcset="http://www.52nlp.cn/wp-content/uploads/2018/03/AB测试题图-1024x568.jpg 1024w, http://www.52nlp.cn/wp-content/uploads/2018/03/AB测试题图-300x167.jpg 300w, http://www.52nlp.cn/wp-content/uploads/2018/03/AB测试题图-768x426.jpg 768w, http://www.52nlp.cn/wp-content/uploads/2018/03/AB测试题图-624x346.jpg 624w" sizes="(max-width: 593px) 100vw, 593px"></p>
+<p style="text-align: justify;line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px;text-align: justify"><span style="font-size: 14px;text-align: justify">当面对众多选择时，如何选才能最大化收益（或者说最小化我们的开销）？比如，怎么选择最优的上班的路线才能使途中花费的时间最少？假设每天上下班路线是确定的，我们便可以在账本中记下往返路线的长度。</span></span></p>
+<p style="text-align: justify;line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">A/B测试便是基于数据来进行优选的常用方法，<span style="font-size: 14px;text-align: justify">在记录多次上班路线长度后，我们便会从数据中发现到一些模式（例如路线A比路线B花的时间更少），然后最终一致选择某条路线。</span></span></p>
+<p style="text-align: justify;line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px;text-align: justify">当A/B测试遇到非简单情况时（如分组不够随机时，或用户量不够大到可以忽略组间差异，或不希望大规模A/B测试长期影响一部分用户的收益），该怎样通过掌握理论知识来更好的指导实践呢？本文尝试通过由浅入深的介绍，希望能够帮助大家对A/B测试有更加深入的理解。</span></p>
+<section style="border: 0px none initial">
+<section style="margin-top: 1em;margin-bottom: 1em;color: #333333;border-bottom: 2px solid #0070c0;clear: both;text-align: right">
+<section style="float: left">
+<section style="color: inherit;font-size: 30px;line-height: 0em">
+<section style="color: inherit;border-color: #0070c0">NO.<span title="">1</span></section>
+</section>
+</section>
+<section style="border-top: 30px solid transparent;border-right: 15px solid #0070c0;border-bottom: 0px solid transparent;border-left-color: #0070c0;vertical-align: top"></section>
+<section style="padding: 3px 10px;height: 30px;color: #ffffff;background-color: #0070c0"><span style="color: #fefefe">为什么需要A/B测试</span></section>
+</section>
+</section>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em;text-align: justify"><span style="color: #0070c0"><strong><span style="font-size: 14px">任何问题，只要它的每个选项能够被多次进行测试，并且每个选项在被测试时都能返回固定的结果，那么它就能使用A/B测试技术来进行优化。</span></strong></span><span style="font-size: 14px">在上述例子中，每天的上下班路线是确定的，所以我们能够在账本中记下往返路线的长度。</span></p>
+<p style="text-align: justify;line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">那么什么样的路线对于用户来说才是一个好的方案呢？是考虑路线A还是B？什么时候用户才有充分的数据去确定哪条线路是最好的？测试线路好与不好的最优策略又是什么？图1用形式化概括定义了问题。</span></p>
+<p><img class="aligncenter" style="cursor: pointer;text-align: center" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959872.jpeg" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" width="1121" height="659"></p>
+<p style="text-align: center"><span style="color: #a5a5a5;font-size: 14px">图1 形式化定义的问题</span></p>
+<section style="width: 100%;vertical-align: top;border-width: 4px 1px 1px 4px;border-style: solid;border-color: #0070c0">
+<section style="margin: 15px"><strong style="font-size: 14px">在这个场景中，参与的用户正面临一个选择，根据他的决策会生成一个结果，而这个结果会对应一份给参与者的反馈。假设用户持续地暴露于这个决策，他应该怎么制定获得最大收益（或等效地说，最小成本）的策略？</strong></section>
+</section>
+</section>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">图1中假定了用户多次处于需要进行选择的场景中，每一次进行决策都会达成一项结果，而这个结果会关联相应的反馈。在上下班这个例子中，假定他每天都需要上下班，而且他每次上下班都必须进行线路的选择，产出的结果是这次上下班中所有因素的结合体，反馈就是从这些因素中构建出来的（陈运文 达观数据）。</span></p>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">这是个浅显的例子，在互联网产品研发时，有大量类似的场景需要做出各种正确的选择，例如：</span></p>
+<section style="border: 0px none initial">
+<section style="text-align: center">
+<section style="background-color: #fefefe;padding-right: 10px;padding-left: 10px"><span style="font-size: 28px"><strong>1</strong></span></section>
+<section style="margin-top: -1.2em;margin-bottom: 0.65em">
+<section style="border-top: 1px solid #0070c0;border-right-color: #0070c0;border-bottom-color: #0070c0;border-left-color: #0070c0;width: 20%;margin-right: auto;margin-left: auto"></section>
+</section>
+<p><span style="font-size: 14px;color: #262626"><strong>着陆页优化（Landing-page optimization）</strong></span></p>
+</section>
+</section>
+<section style="border: 0px none initial">
+<p style="text-align: center;margin-left: 10px;margin-right: 10px">
+</p></section>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">在用户点击去往的页面（着陆页），如何获得最大的转化率（常用计算方法为有购买行为或深度网页交互行为的用户数占网站访问总用户数的比率）。决策要考虑到着陆页的形式和内容（要从可能已有的3或4个备选方案中做出选择），希望能够从候选集合中选出最好的着陆页，以能够吸引来访的用户，并让深度交互或者购买行为的概率最大化。</span></p>
+<section style="border: 0px none initial">
+<section style="text-align: center">
+<section style="background-color: #fefefe;padding-right: 10px;padding-left: 10px"><span style="font-size: 28px"><strong>2</strong></span></section>
+<section style="margin-top: -1.2em;margin-bottom: 0.65em">
+<section style="border-top: 1px solid #0070c0;border-right-color: #0070c0;border-bottom-color: #0070c0;border-left-color: #0070c0;width: 20%;margin-right: auto;margin-left: auto"></section>
+</section>
+<p><span style="font-size: 14px;color: #262626"><strong>广告创意优化（Ad creative optimization）</strong></span></p>
+</section>
+</section>
+<p style="line-height: 1.75em;text-align: justify;margin-left: 10px;margin-right: 10px"><span style="color: #0070c0"><strong><span style="font-size: 14px">在线广告提出了许多适合机器学习技术应用的挑战，其中之一就是如何选择广告的形式和内容。</span></strong></span><span style="font-size: 14px">当我们决定将要进行广告展示，以及确定了广告的价格后，在这个广告位上选择放置什么广告呢？我们需要对大量的决策进行测试，选出正确的广告创意组合。</span></p>
+<section style="border: 0px none initial">
+<section style="margin-top: 1em;margin-bottom: 1em;color: #333333;border-bottom: 2px solid #0070c0;clear: both;text-align: right">
+<section style="float: left">
+<section style="color: inherit;font-size: 30px;line-height: 0em">
+<section style="color: inherit;border-color: #0070c0">NO.<span title="">2</span></section>
+</section>
+</section>
+<section style="border-top: 30px solid transparent;border-right: 15px solid #0070c0;border-bottom: 0px solid transparent;border-left-color: #0070c0;vertical-align: top"></section>
+<section style="padding: 3px 10px;height: 30px;color: #ffffff;background-color: #0070c0"><span style="color: #fefefe">什么是A/B测试</span></section>
+</section>
+</section>
+<p><span style="font-size: 14px">经常遇到的问题是，我们应该怎么评估各不相同的决策，以及应该采用哪些策略来测试我们的产出？ A/B测试（A/B testing）就是其中之一的方法。A/B测试近年来很受欢迎，但大部分产品经理也许会简单地认为它只不过是一种包含两个组的实验，其实背后有更为复杂的数学统计理论知识。</span></p>
+<section style="border: 0px none initial">
+<section style="border: 0px none initial">
+<section style="padding: 10px">
+<section style="padding: 8px;border: 1px solid #0070c0">
+<section style="padding: 10px;border: 1px solid #0070c0">
+<section style="width: auto;background-color: #0070c0;color: #ffffff;line-height: 30px;padding-right: 20px;padding-left: 20px;max-width: 60%">具体细节</section>
+</section>
+<section style="padding: 10px;border: 1px solid #0070c0"><span style="font-size: 14px;text-align: justify">当进行A/B测试时，通常会采用两个（或多个）组：A组和B组。第一个组是对照组，第二个组会改变其中一些因素。就以着陆页优化为例，A组会展示现有的着陆页，B组会展示一个内容或者内容作了某些修改的新着陆页。</span><strong style="font-size: 14px;text-align: justify">A/B测试的目的就是尝试了解新的布局是否在统计上显著地改变了转化率。</strong></section>
+</section>
+</section>
+</section>
+</section>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px"><strong>特别值得注意的是</strong>，将用户分配到对应的组需要经过深思熟虑。对于A/B测试，我们可以高效地进行随机分组。当用户数量较大时，各组间用户行为可以假设是相同的（即组间没有偏差）。但是，这里有三个非常重要的关键点，是大家有必要进一步理解其数学理论原理的原因：</span></p>
+<section style="border: 0px none initial">
+<section style="margin-right: 0%;margin-left: 0%">
+<section style="width: 100%;vertical-align: top">
+<section>
+<section style="padding-right: 0.2em;padding-top: 0.5em">
+<section style="vertical-align: top;width: 3em;height: 3em;padding: 3px;border: 1px solid #0070c0">
+<section style="width: 100%;height: 100%;background-color: #0070c0;text-align: center;color: #ffffff;font-size: 20.16px;line-height: 1.4">
+<section title="">1</section>
+</section>
+</section>
+<section style="vertical-align: top;width: 6px;height: 6px;margin-left: -0.5em;background-color: #0070c0;color: #ffffff"></section>
+<section style="vertical-align: top;width: 3px;height: 3px;margin-top: -0.22em;margin-left: 0.1em;background-color: #0070c0;color: #ffffff"></section>
+</section>
+</section>
+<section style="margin-right: 0%;margin-left: 0%">
+<section style="width: 100%;vertical-align: top;padding-left: 16px;border-width: 0px">
+<section style="width: 100%;vertical-align: top;border-left: 2px dashed #a0a0a0;padding-left: 10px;border-bottom-color: #0070c0;border-top-color: #0070c0;border-right-color: #0070c0">
+<section style="margin: -30px 0% 10px">
+<section style="width: 100%;vertical-align: top;padding-left: 15px">
+<section>
+<section style="text-align: justify;font-weight: bold;font-size: 18px">问题1</section>
+</section>
+</section>
+</section>
+<section style="margin-right: 0%;margin-bottom: 5px;margin-left: 0%;font-size: 14px"><strong>怎样验证两个组的用户的行为是无偏差、完全相同的</strong></section>
+</section>
+</section>
+</section>
+</section>
+</section>
+</section>
+<section style="border: 0px none initial">
+<section style="margin-right: 0%;margin-left: 0%">
+<section style="width: 100%;vertical-align: top">
+<section>
+<section style="padding-right: 0.2em;padding-top: 0.5em">
+<section style="vertical-align: top;width: 3em;height: 3em;padding: 3px;border: 1px solid #0070c0">
+<section style="width: 100%;height: 100%;background-color: #0070c0;text-align: center;color: #ffffff;font-size: 20.16px;line-height: 1.4">
+<section title="">2</section>
+</section>
+</section>
+<section style="vertical-align: top;width: 6px;height: 6px;margin-left: -0.5em;background-color: #0070c0;color: #ffffff"></section>
+<section style="vertical-align: top;width: 3px;height: 3px;margin-top: -0.22em;margin-left: 0.1em;background-color: #0070c0;color: #ffffff"></section>
+</section>
+</section>
+<section style="margin-right: 0%;margin-left: 0%">
+<section style="width: 100%;vertical-align: top;padding-left: 16px;border-width: 0px">
+<section style="width: 100%;vertical-align: top;border-left: 2px dashed #a0a0a0;padding-left: 10px;border-bottom-color: #0070c0;border-top-color: #0070c0;border-right-color: #0070c0">
+<section style="margin: -30px 0% 10px">
+<section style="width: 100%;vertical-align: top;padding-left: 15px">
+<section>
+<section style="text-align: justify;font-weight: bold;font-size: 18px">问题2</section>
+</section>
+</section>
+</section>
+<section style="margin-right: 0%;margin-bottom: 5px;margin-left: 0%;font-size: 14px">
+<p style="line-height: 1.75em"><strong>当两个组的用户行为不完全相同时（例如分组不够随机或者组内用户数量较小时），该如何设计AB测试以实现期望的验证结果</strong></p>
+</section>
+</section>
+</section>
+</section>
+</section>
+</section>
+</section>
+<section style="border: 0px none initial">
+<section style="margin-right: 0%;margin-left: 0%">
+<section style="width: 100%;vertical-align: top">
+<section>
+<section style="padding-right: 0.2em;padding-top: 0.5em">
+<section style="vertical-align: top;width: 3em;height: 3em;padding: 3px;border: 1px solid #0070c0">
+<section style="width: 100%;height: 100%;background-color: #0070c0;text-align: center;color: #ffffff;font-size: 20.16px;line-height: 1.4">
+<section title="">3</section>
+</section>
+</section>
+<section style="vertical-align: top;width: 6px;height: 6px;margin-left: -0.5em;background-color: #0070c0;color: #ffffff"></section>
+<section style="vertical-align: top;width: 3px;height: 3px;margin-top: -0.22em;margin-left: 0.1em;background-color: #0070c0;color: #ffffff"></section>
+</section>
+</section>
+<section style="margin-right: 0%;margin-left: 0%">
+<section style="width: 100%;vertical-align: top;padding-left: 16px;border-width: 0px">
+<section style="width: 100%;vertical-align: top;border-left: 2px dashed #a0a0a0;padding-left: 10px;border-bottom-color: #0070c0;border-top-color: #0070c0;border-right-color: #0070c0">
+<section style="margin: -30px 0% 10px">
+<section style="width: 100%;vertical-align: top;padding-left: 15px">
+<section>
+<section style="text-align: justify;font-weight: bold;font-size: 18px">问题3</section>
+</section>
+</section>
+</section>
+<section style="margin-right: 0%;margin-bottom: 5px;margin-left: 0%;font-size: 14px">
+<p style="line-height: 1.75em"><strong>当用户基础行为受其他因素影响发生整体变化了呢？例如季节、时间波动、热度等因素影响下，怎样更好的剔除干扰来评估结果</strong></p>
+</section>
+</section>
+</section>
+</section>
+</section>
+</section>
+</section>
+<section style="border: 0px none initial">
+<section style="margin-top: 1em;margin-bottom: 1em;color: #333333;border-bottom: 2px solid #0070c0;clear: both;text-align: right">
+<section style="float: left">
+<section style="color: inherit;font-size: 30px;line-height: 0em">
+<section style="color: inherit;border-color: #0070c0">NO.<span title="">3</span></section>
+</section>
+</section>
+<section style="border-top: 30px solid transparent;border-right: 15px solid #0070c0;border-bottom: 0px solid transparent;border-left-color: #0070c0;vertical-align: top"></section>
+<section style="padding: 3px 10px;height: 30px;color: #ffffff;background-color: #0070c0"><span style="color: #fefefe"><strong style="font-size: 14px">AB测试的统计理论</strong></span></section>
+</section>
+</section>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">假设我们已经构建了两组数目较大的用户组，这些用户组的区别仅在于他们到达的着陆页。我们现在希望能测试两组间的转化率在统计上是否存在明显差异。由于样本量大，我们可以采用双样本单尾z-检验（two-sample, one-tailed z-test）。另外，对于较小的样本集合，我们可以依赖于t-检验。</span></p>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px"><strong>z检验（z-test）</strong>是在数据是正态分布和随机抽样的假设下运行的，目的是验证测试集（B组）是否与该对照集（A组）有显著不同，但是如何执行这个测试呢？</span></p>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">假设有来自A组和B组中的每一组的5,000个样本。我们需要一个数学公式来说明我们的零假设（null hypothesis）——两组群体的转化率没有显著的正差异，和备择假设（或称对立假设，alternative hypothesis）——不同人群间的转化率确实存在着正差异。</span></p>
+<p style="margin-left: 10px;margin-right: 10px;text-align: justify;line-height: 1.75em"><span style="font-size: 14px">我们可将采样转化率视为一个正态分布的随机变量，也就是说，采样的转化率是在正态分布下对转化率的一个观测。要了解这一点，请考虑从同一组中提取多个样本进行实验将导致略有不同的转化率。每当对某组进行抽样时，可获得群体转化率的估计，对于A组和B组都是如此。为此我们提出一个新的正态随机变量，它是A和B组的随机变量的组合，是差值的分布。让我们用X来表示这个新的随机变量，定义为:</span></p>
+<p><img style="width: 118px;height: 30px" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959872.png" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起"></p>
+<p style="margin-left: 8px;margin-right: 8px"><span style="font-size: 14px">其中，Xe表示实验组的转化率的随机变量，Xn表示对照组的转化率的随机变量。现在我们可以写出零假设和备择假设。零假设可以表示为：</span></p>
+<p><img style="width: 100px;height: 25px" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959872-1.png" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起"></p>
+<p style="margin-left: 8px;margin-right: 8px"><span style="font-size: 14px">这表示实验组和对照组是相同的。两个随机变量Xe和Xn分布在相同的群体平均值周围，所以我们的新随机变量X应该分布在0左右。我们的备择假设可以表示如下:</span></p>
+<p><img style="width: 88px;height: 24px" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959872-2.png" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起"></p>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">实验组的随机变量的期望值大于对照组的期望值；该群体的平均值较高。</span></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">我们可以在零假设的前提下，对X的分布执行单尾z检验，以确定是否有证据支持备择假设。为了达到这个目的，我们对X进行采样，计算标准分，并测试已知的显著性水平。</span></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">X的采样等效于运行两个实验，确定它们各自的转化率，并将对照组和实验组的转化率相减。按照标准分的定义，可以写作：</span></p>
+<p><img style="width: 257px;height: 34px" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959873.png" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起"></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">其中，P_experiment是实验组的转化率，P_control&nbsp;是对照组的转化率，SE是转化率差值的标准差。</span></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">为确定标准误差，注意到转化过程是符合二项分布的，因此访问该网站可以被看作单次伯努利试验（single Bernoulli trial），而积极结果（完成转化）的可能性是未知的。</span></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">假设样本数量足够大，我们可以使用广泛采用的Wald方法（</span><span style="font-size: 14px;color: #888888">参考Lawrence D. Brown, T. Tony Cai, and Anirban DasGupta, “Confidence Intervals for a Binomial Proportion and Asymptotic Expansions,” The Annals of Statistics 30, no. 1 (2002): 160–201.</span><span style="font-size: 14px">）将该分布近似为正态分布。为了捕获特定转化率的不确定性，我们可以将标准误差（SE）写入实验组和对照组，其中p是转化的可能性，n是样本数量，具体如下：</span></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px"><img style="height: 36px;font-size: 16px;width: 115px" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959873-1.png" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起"></span></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">从二项分布（np（1-p））的方差得到分子，而分母表示当采用更多的样本时，转化率的误差会随之下降。请注意正面结果的概率等同于转化率，并且因为两个变量的标准误差可以通过相加来合并，得到如下结果：</span></p>
+<p><img style="cursor: pointer;text-align: center" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959873.jpeg" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" width="341"></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">通过替换，可获得如下的z检验公式，这是一个符合二项分布的Wald（或正态）区间的公式：</span></p>
+<p><img style="cursor: pointer;text-align: center" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959873-1.jpeg" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" width="426"></p>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">z的值越大，反对零假设的证据就越多。为了获得单尾测试的90％置信区间，我们的z值将需要大于1.28。这实际上这是指在零假设（A组和B组的人口平均值是相同的）的条件下，等于或大于这个转化率差值的偶然发生的概率小于10％。 </span></p>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px;text-align: justify"><span style="color: #0c0c0c"><strong><span style="font-size: 14px">换句话说，在对照组和实验组的转化率来自具有相同平均值的分布的假设前提下，如果运行相同的实验100次，只会有10次具有这样的极端值。我们可以通过95％的置信区间，更严格的边界和更多的证据来反对零假设，这时需要将z值增加到1.65。</span></strong></span></p>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">研究影响z大小的因素会带来很多有用的帮助。很显然，如果在一个给定的时间点从一个实验集和一个对照集中提取两个转化率，转化率的差值越大将导致z分数越大。因此就有了更多的证据表明两个集合分别来自不同的人群，而且这些人群带有不同的均值。然而样品的数量也很重要，如你所见，大量样本将导致总体较小的标准误差。这表明运行实验的时间越长，转化率的估算越准确。</span></p>
+<section style="border: 0px none initial">
+<section style="margin-top: 1em;margin-bottom: 1em;color: #333333;border-bottom: 2px solid #0070c0;clear: both;text-align: right">
+<section style="float: left">
+<section style="color: inherit;font-size: 30px;line-height: 0em">
+<section style="color: inherit;border-color: #0070c0">NO.<span title="">4</span></section>
+</section>
+</section>
+<section style="padding: 3px 10px;height: 30px;color: #ffffff;background-color: #0070c0"><span style="color: #fefefe">评估效果的代码实现</span></section>
+</section>
+</section>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">设想你在负责大型零售网站，设计团队刚刚修改了着陆页。每周有约20,000用户，并可以量化用户的转化率：即购买产品的百分比。设计团队向你保证新网站将带来更多的客户。但你不太确定，希望运行A / B测试来看看效果是否真的会提高。</span></p>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px;text-align: justify"><span style="font-size: 14px">用户在第一次访问网站时被随机分配到A组或B组，并在实验期间始终保留在该组中，实验结束时评估两组用户的平均转化率。统计结果是，新着陆页的平均转化率是0.002，而原先的着陆页的平均转化率是0.001。在着陆页永久更改为新设计之前，你需要知道这一增长是否足够明确。下面这段代码帮你回答这个问题。</span></p>
+<p><img class="aligncenter" style="cursor: pointer;text-align: center" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959874.jpeg" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" width="959" height="420"></p>
+<p style="line-height: 1.75em;text-align: justify"><span style="font-size: 14px">这段代码获取实验中z的值，在上述参数条件下z值为1.827，超过了92％置信区间，但不在95％的区间内。可以说，从控制分布中抽取数据的概率小于0.08。因此在该区间内数据提升是显著的。我们应该否定零假设，接受备择假设，即组之间有差异，第二组具有较高的转化率。如果我们控制了用户组的所有其他方面，就意味着网站的新设计产生了积极的效果。</span></p>
+<p style="line-height: 1.75em;text-align: justify"><span style="font-size: 14px">你应该能够从代码中看到转化率分布的标准误差对返回的z值有直接影响。 对给定的常数值p_experiment和p_control，两个组的SE越高，z的数值越小，结果就越不显著。还注意到由于SE的定义，z的数值与样本的数量具有直接关系，对于给定的转换概率也同样如此。图2展示了这种关系。</span></p>
+<figure><img class="aligncenter" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959874-1.jpeg" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" width="971" height="778"></figure>
+<p style="text-align: center"><span style="font-size: 14px;color: #a5a5a5">图2</span></p>
+<p style="line-height: 1.75em;text-align: justify;margin-left: 8px;margin-right: 8px"><span style="font-size: 14px"><strong>图2</strong> <strong>展示了A / B组的固定转化率，以及A / B组中的用户数量和z值之间的关系。</strong> <strong>假设转化率不会随着我们收集更多数据而改变，我们需要每个组中大约3,000个用户达到70％的置信区间。</strong> <strong>要达到80%的置信区间时需要每组约5000个用户，达到90%时需要 7500个用户，达到95%时需要12000个用户。</strong></span></p>
+<p style="margin-left: 8px;margin-right: 8px"><span style="font-size: 14px">图2中可见对于两个组的给定转化率，测试组中的用户越多，备择假设的证据就越充分。直观上来看这很容易理解：当收集的数据越多，我们对结果越自信！我们也可以绘制一张类似的图，保持用户数量不变，改变组之间的差异。<span style="color: #0070c0"><strong>但必须注意，对正在关注的应用，不应该期望效果的大幅度变化。</strong></span></span></p>
+<p>&nbsp;</p>
+<section style="border: 0px none initial">
+<section style="margin-top: 1em;margin-bottom: 1em;color: #333333;border-bottom: 2px solid #0070c0;clear: both;text-align: right">
+<section style="float: left">
+<section style="color: inherit;font-size: 30px;line-height: 0em">
+<section style="color: inherit;border-color: #0070c0">NO.<span title="">5</span></section>
+</section>
+<section style="margin-left: 0.5em;text-align: left;color: inherit;border-left: 1px solid #0070c0">
+<section style="color: inherit;text-align: inherit;padding-left: 6px"></section>
+</section>
+</section>
+<section style="border-top: 30px solid transparent;border-right: 15px solid #0070c0;border-bottom: 0px solid transparent;border-left-color: #0070c0;vertical-align: top"></section>
+<section style="padding: 3px 10px;height: 30px;color: #ffffff;background-color: #0070c0"><span style="color: #fefefe">A/B测试方法的副作用和处理办法</span></section>
+</section>
+</section>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px;text-align: justify"><span style="font-size: 14px">对于非常小的效果变化，往往都需要创建相当大的对照组和测试组来实现AB测试，这个的代价往往是很大的。设想下在零售商场中，每天观察到的用户数量，往往需要很久的时间才能得出明显的结论。在实际业务应用中，会遇到的问题是：</span><strong style="font-size: 14px">当你运行测试时整体运行的效果是受到很大影响的，因为必须有一半的用户处于效果不佳的实验组，或者有一半的用户处于效果不佳的对照组，而且你必须等待测试完成才能停止这种局面。</strong></p>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px;text-align: justify"><span style="color: #0070c0"><strong><span style="font-size: 14px">这是被称为探索利用难题（explore-exploit conundrum）的一个经典问题。我们需要运行次优方法，以探索空间，并找到效果更好的解决方案，而一旦找到了更好的解决方案，我们还需要尽快利用它们来实现效果提升。</span></strong></span><span style="font-size: 14px">能否可以更快地利用新的解决方案，而不必等待测试完全完成呢？答案是肯定的。下面简单介绍下多臂赌博机（multi-armed bandit，MAB）的概念。</span></p>
+<section style="border: 0px none initial">
+<section style="text-align: center">
+<section style="background-color: #fefefe;padding-right: 10px;padding-left: 10px"><span style="font-size: 28px"><strong>1</strong></span></section>
+<section style="margin-top: -1.2em;margin-bottom: 0.65em">
+<section style="border-top: 1px solid #0070c0;border-right-color: #0070c0;border-bottom-color: #0070c0;border-left-color: #0070c0;width: 20%;margin-right: auto;margin-left: auto"></section>
+</section>
+<p><span style="font-size: 14px;color: #262626"><strong>多臂赌博机的定义</strong></span></p>
+</section>
+</section>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px;text-align: justify"><span style="font-size: 14px">多臂赌博机（multi-armed bandit，MAB）的名字来源于著名的赌博游戏角子赌博机（one-armed bandit）。对那些从没去过赌场的人，我们来做下解释：角子机（又称老虎机）是一个需要你拉杠杆（或摇臂）的赌博机器，根据机器展示的数值，你可能会得到一笔奖励，也可能（更大几率）得不到任何东西。和你想的一样，这些机器的设置都对庄家有利，所以能获的奖励的几率是非常非常小的。</span></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em;text-align: justify"><span style="font-size: 14px">多臂赌博机（理论上的）扩展了这种形式，想象你面对的是一堆角子赌博机，每个赌博机都被分配按照一个独立的概率进行奖励。作为一个玩家，你不知道在这些机器后的获奖概率，你唯一可以找到获奖概率的方法是进行游戏。你的任务是通过玩这些机器，最大限度地提高所获的奖励。那么你应该使用什么策略呢？</span></p>
+<section style="border: 0px none initial">
+<section style="text-align: center">
+<section style="background-color: #fefefe;padding-right: 10px;padding-left: 10px"><span style="font-size: 28px"><strong>2</strong></span></section>
+<section style="margin-top: -1.2em;margin-bottom: 0.65em">
+<section style="border-top: 1px solid #0070c0;border-right-color: #0070c0;border-bottom-color: #0070c0;border-left-color: #0070c0;width: 20%;margin-right: auto;margin-left: auto"></section>
+</section>
+<p><span style="font-size: 14px;color: #262626"><strong>多臂赌博机策略</strong></span></p>
+</section>
+</section>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">为了更严格地定义问题，我们通过数学形式化来表达，假设现在有k个赌博机，可观察到的每台的获奖概率等于</span><span style="font-size: 14px">p_k</span><span style="font-size: 14px">。假设一次只能拉动一个摇臂，并且赌博机只会按照它关联的概率机型奖励。这是一个设置了限定局数的有限次的游戏。在游戏期间任意时间点时，水平线H被定义为允许的剩余游戏的数量。</span></p>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">对所有机器用户会尝试最大化的获奖回报。在游戏中的任一时间点，我们都可以通过使用称为遗憾值（regret）来度量用户的表现。遗憾值的意思是，假设用户能在每一步选择最优的赌博机，得到的奖励和目前获得的实际奖励的差值。遗憾值的数学定义为:</span></p>
+<p><img style="width: 149px;height: 60px" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959874.png" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起"></p>
+<p style="text-align: justify;margin-left: 8px;margin-right: 8px;line-height: 1.75em"><span style="font-size: 14px">其中T表示我们到目前为止进行过的步数，r_t表示在第t步获得的奖励，u_opt表示每一局从最优赌博机返回来的期望奖励。遗憾值的数值越低，策略越优。但因为这个度量值会受到偶然性的影响（奖励可能会被从最优赌博机选择中获得的期望奖励更高），我们可以选择使用遗憾值的期望值代替,定义为:</span></p>
+<p><img style="width: 113px;height: 62px" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959874-1.png" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起"></p>
+<p style="margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">其中μ_t是在第t步从赌博机中获得的平均奖励（不可观测的）。因为第二项是来自所选策略的期望奖励，所以它将小于或等于来自最优策略（每一步都选择最优的赌博机）的期望奖励。</span></p>
+<section style="border: 0px none initial">
+<section style="text-align: center">
+<section style="background-color: #fefefe;padding-right: 10px;padding-left: 10px"><span style="font-size: 28px"><strong>3</strong></span></section>
+<section style="margin-top: -1.2em;margin-bottom: 0.65em">
+<section style="border-top: 1px solid #0070c0;border-right-color: #0070c0;border-bottom-color: #0070c0;border-left-color: #0070c0;width: 20%;margin-right: auto;margin-left: auto"></section>
+</section>
+<h2 style="font-weight: bold;line-height: 1.6em"><span style="font-size: 14px"><strong>Epsilon优先方法</strong></span></h2>
+</section>
+</section>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">Epsilon优先（Epsilon first）是MAB策略中最简单的一种方式，它被认为和事先执行A/B测试方法具有同等意义。给定ε，执行探索空间操作的次数为(1 – ε) × N，其中N是游戏中总共的局数，剩余的次数都是执行后续探索的局数。</span></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">update_best_bandit算法会持续统计记录每一个赌博机的奖励收入和游戏局数。变best_bandit会在每一局结束进行更新，记录当前具有最高获奖概率的赌博机的编号，流程如下：</span></p>
+<p><img class="aligncenter" style="cursor: pointer;text-align: center" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959874-2.jpeg" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" width="1001" height="478"></p>
+<section style="border: 0px none initial">
+<section style="text-align: center">
+<section style="background-color: #fefefe;padding-right: 10px;padding-left: 10px"><span style="font-size: 28px"><strong>4</strong></span></section>
+<section style="margin-top: -1.2em;margin-bottom: 0.65em">
+<section style="border-top: 1px solid #0070c0;border-right-color: #0070c0;border-bottom-color: #0070c0;border-left-color: #0070c0;width: 20%;margin-right: auto;margin-left: auto"></section>
+</section>
+<h2 style="font-weight: bold;line-height: 1.6em"><span style="font-size: 14px"><strong>Epsilon贪婪</strong></span></h2>
+</section>
+</section>
+<p style="margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">Epsilon贪婪（epsilon-greedy）策略中，ε表示我们进行探索空间的概率，和进行利用已知最优摇臂的事件互斥</span></p>
+<p><img class="aligncenter" style="cursor: pointer;text-align: center" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959875.jpeg" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" width="1200" height="427"></p>
+<p><strong><span style="font-size: 14px">该方法的特点：</span></strong><span style="font-size: 14px">不需要等到探索阶段完成，才能开始利用有关赌博机的奖励表现的知识。但要小心，该算法不会考虑效果数据的统计意义。因此可能发生这样的情况：个别赌博机的奖励峰值导致后续的所有局游戏都错误地选择了这个赌博机（陈运文 达观数据）。</span></p>
+<section style="border: 0px none initial">
+<section style="text-align: center">
+<section style="background-color: #fefefe;padding-right: 10px;padding-left: 10px"><span style="font-size: 28px"><strong>5</strong></span></section>
+<section style="margin-top: -1.2em;margin-bottom: 0.65em">
+<section style="border-top: 1px solid #0070c0;border-right-color: #0070c0;border-bottom-color: #0070c0;border-left-color: #0070c0;width: 20%;margin-right: auto;margin-left: auto"></section>
+</section>
+<h2 style="font-weight: bold;line-height: 1.6em"><span style="font-size: 14px"><strong>Epsilon递减</strong></span></h2>
+</section>
+</section>
+<p style="margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">Epsilon递减（epsilon-decreasing）策略在实验开始阶段，会有一个很高的ε值，所以探索空间的可能性很高。ε值会随着水平线H上升而不断递减，致使利用似然知识的可能性更高。</span></p>
+<p><img class="aligncenter" style="cursor: pointer;text-align: center" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959875-1.jpeg" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" width="1134" height="497"></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">需要注意这里有几种方法去来选择一个最优的速率来更新ε值，具体取决于赌博机的数量，以及他们各自进行奖励的权重。</span></p>
+<section style="border: 0px none initial">
+<section style="text-align: center">
+<section style="background-color: #fefefe;padding-right: 10px;padding-left: 10px"><span style="font-size: 28px"><strong>6</strong></span></section>
+<section style="margin-top: -1.2em;margin-bottom: 0.65em">
+<section style="border-top: 1px solid #0070c0;border-right-color: #0070c0;border-bottom-color: #0070c0;border-left-color: #0070c0;width: 20%;margin-right: auto;margin-left: auto"></section>
+</section>
+<h2 style="font-weight: bold;line-height: 1.6em"><span style="font-size: 14px"><strong>贝叶斯赌博机</strong></span></h2>
+</section>
+</section>
+<p style="text-align: justify;line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">与A / B测试类似，贝叶斯赌博机（Bayesian bandits）假设每个赌博机的获奖概率被建模为获奖概率的分布。当我们开始实验时，每个赌博机都有一个通用的先验概率（任意赌博机的奖励比率初始都是同等的）。</span></p>
+<p style="text-align: justify;line-height: 1.75em;margin-left: 10px;margin-right: 10px"><span style="font-size: 14px">在某一个赌博机上进行的局数越多，我们对它的奖励信息就了解越多，所以基于可能的奖励概率更新其获奖概率分布。当需要选择玩哪一个赌博机的时候，从获奖概率分布中采样，并选择对应样本中具有最高奖励比率的赌博机。图3提供了在给定时间内对三个赌博机所含信息的图形化表示。</span></p>
+<p><img class="aligncenter" style="cursor: pointer;text-align: center" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959875-2.jpeg" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" width="750" height="622"></p>
+<p style="text-align: center"><span style="color: #a5a5a5"><strong style="font-size: 14px">图3</strong></span></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em;text-align: justify"><span style="font-size: 14px"><strong>使用贝叶斯赌博机策略对三个赌博机的获奖概率信息进行建模。第1、2和3个赌博机的平均获奖率分别为0.1、0.3和0.4。</strong> <strong>第1个赌博机具有较低的平均值而且方差也比较大，第2个赌博机具有较高的平均值和较小的方差，第3个赌博机具有更高的平均值和更小的方差。</strong></span></p>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em;text-align: justify"><span style="font-size: 14px">可以看到关于赌博机的获奖概率分布的信息被编码为三个分布。每个分布具有递增的平均值和递减的方差。因此，我们不太确定奖励期望值为0.1的真实奖励率，最可靠的是奖励期望值为0.4的赌博机。因为赌博机的选择是通过对分布进行抽样来进行的，所以分布期望值是0.1的赌博机的摇臂也可能被拉动。这个事件会发生在第2个赌博机和第3个赌博机的采样样本奖励值异常小，而且第1个赌博机的采样样本异常大时，相应代码如下（陈运文 达观数据）：</span></p>
+<p><img class="aligncenter" style="cursor: pointer;text-align: center" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959875-3.jpeg" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" width="760" height="324"></p>
+<section style="border: 0px none initial">
+<section style="margin-top: 1em;margin-bottom: 1em;color: #333333;border-bottom: 2px solid #0070c0;clear: both;text-align: right">
+<section style="float: left">
+<section style="color: inherit;font-size: 30px;line-height: 0em">
+<section style="color: inherit;border-color: #0070c0">NO.<span title="">6</span></section>
+</section>
+</section>
+<section style="border-top: 30px solid transparent;border-right: 15px solid #0070c0;border-bottom: 0px solid transparent;border-left-color: #0070c0;vertical-align: top"></section>
+<section style="padding: 3px 10px;height: 30px;color: #ffffff;background-color: #0070c0"><span style="color: #fefefe">总结</span></section>
+</section>
+</section>
+<p style="margin-left: 10px;margin-right: 10px;line-height: 1.75em"><span style="font-size: 14px">A/B测试和贝叶斯赌博机的各自的优点和局限是：两者有各自适用的场景，也验证的变量数量也各不相同，具体如下表。</span></p>
+<p><img class="aligncenter" style="cursor: pointer;text-align: center" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959876.jpeg" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" width="918" height="140"></p>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px;text-align: justify"><span style="font-size: 14px">此外，两个方法的收敛速度也很不一样。在A/B测试中是指获得统计意义，在贝叶斯赌博机中是指累积遗憾值不再增加。以本章最开始的网站优化为例，首先请注意，任何行为的改变可能是微小的（&lt;0.01），而我们已经知道贝叶斯赌博机相比大的改变提升，需要更多的收敛时间。如果加了多种选择，在同一个实验中测试多种登陆页面，将更加会影响收敛速度。假如用户变化导致的底层分布变的比模型收敛更快呢？比如，季节趋势，销售或者其他因素可能会影响。</span></p>
+<p><img class="aligncenter" style="cursor: pointer;text-align: center" title="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/beepress-beepress-weixin-zhihu-jianshu-plugin-2-4-2-2814-1519959876-1.jpeg" alt="技术干货 | 如何选择上班路线最省时间？从A/B测试数学原理说起" width="892" height="119"></p>
+<p style="line-height: 1.75em;margin-left: 10px;margin-right: 10px;text-align: justify"><span style="font-size: 14px">显然，收集的数据越多，对效果的潜在变化的把握度就越高。当2个组划分本身就存在统计差异时，通过多臂赌博机而不是A/B测试的方法可以从概率上修正我们选择的分布。本文还重点介绍了z检验（z-test）的数学知识，因为其构成了A/B测试的统计理论基础。</span></p>
+<div class="yarpp-related">
+<p>相关文章:</p><ol>
+<li><a href="http://www.52nlp.cn/fasttext" rel="bookmark" title="fastText原理及实践（达观数据王江）">fastText原理及实践（达观数据王江） </a></li>
+<li><a href="http://www.52nlp.cn/mit-nlp-third-lesson-probabilistic-language-modeling-fourth-part" rel="bookmark" title="MIT自然语言处理第三讲：概率语言模型（第四部分）">MIT自然语言处理第三讲：概率语言模型（第四部分） </a></li>
+<li><a href="http://www.52nlp.cn/%e5%ae%89%e8%a3%85srilm%e7%9a%84%e4%b8%80%e7%82%b9%e6%96%b0%e5%8f%98%e5%8c%96" rel="bookmark" title="安装Srilm的一点新变化">安装Srilm的一点新变化 </a></li>
+<li><a href="http://www.52nlp.cn/%e6%ad%a3%e6%80%81%e5%88%86%e5%b8%83%e7%9a%84%e5%89%8d%e4%b8%96%e4%bb%8a%e7%94%9f%e4%ba%94" rel="bookmark" title="正态分布的前世今生(五)">正态分布的前世今生(五) </a></li>
+<li><a href="http://www.52nlp.cn/beautiful-data-%e7%bb%9f%e8%ae%a1%e8%af%ad%e8%a8%80%e6%a8%a1%e5%9e%8b%e7%9a%84%e5%ba%94%e7%94%a8%e4%b8%89%e5%88%86%e8%af%8d6" rel="bookmark" title="Beautiful Data-统计语言模型的应用三：分词6">Beautiful Data-统计语言模型的应用三：分词6 </a></li>
+<li><a href="http://www.52nlp.cn/andrew-ng-%e5%90%b4%e6%81%a9%e8%be%be%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0%e8%af%be%e7%a8%8b%e5%b0%8f%e7%bb%93" rel="bookmark" title="Andrew Ng (吴恩达) 深度学习课程小结">Andrew Ng (吴恩达) 深度学习课程小结 </a></li>
+<li><a href="http://www.52nlp.cn/coursera%e5%85%ac%e5%bc%80%e8%af%be%e7%ac%94%e8%ae%b0-%e6%96%af%e5%9d%a6%e7%a6%8f%e5%a4%a7%e5%ad%a6%e6%9c%ba%e5%99%a8%e5%ad%a6%e4%b9%a0%e7%ac%ac%e5%85%ad%e8%af%be%e9%80%bb%e8%be%91%e5%9b%9e" rel="bookmark" title="Coursera公开课笔记: 斯坦福大学机器学习第六课“逻辑回归(Logistic Regression)”">Coursera公开课笔记: 斯坦福大学机器学习第六课“逻辑回归(Logistic Regression)” </a></li>
+<li><a href="http://www.52nlp.cn/%e6%96%af%e5%9d%a6%e7%a6%8f%e5%a4%a7%e5%ad%a6%e6%9c%ba%e5%99%a8%e5%ad%a6%e4%b9%a0%e7%ac%ac%e4%b9%9d%e8%af%be%e7%a5%9e%e7%bb%8f%e7%bd%91%e7%bb%9c%e7%9a%84%e5%ad%a6%e4%b9%a0neural-networks-le" rel="bookmark" title="斯坦福大学机器学习第九课“神经网络的学习(Neural Networks: Learning)”">斯坦福大学机器学习第九课“神经网络的学习(Neural Networks: Learning)” </a></li>
+<li><a href="http://www.52nlp.cn/wordpress-equation-editor-plugin" rel="bookmark" title="WordPress中的公式编辑器插件">WordPress中的公式编辑器插件 </a></li>
+<li><a href="http://www.52nlp.cn/moses-basic-framework" rel="bookmark" title="Moses基本框架">Moses基本框架 </a></li>
+</ol><p></p>
+</div>
+<div class="code-block code-block-2" style="margin: 8px auto; text-align: center; clear: both;">
+<a href="https://click.linksynergy.com/fs-bin/click?id=9IqCvd3EEQc&amp;offerid=467035.414&amp;subid=0&amp;type=4"><img border="0" alt="Deep Learning Specialization on Coursera" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/show(1)"></a></div>
+					</div><!-- .entry-content -->
+		
+		<footer class="entry-meta">
+			本条目发布于<a href="http://www.52nlp.cn/abceshi" title="11:19" rel="bookmark"><time class="entry-date" datetime="2018-03-02T11:19:37+00:00">2018年03月2号</time></a>。属于<a href="http://www.52nlp.cn/category/%e6%95%b0%e6%8d%ae%e6%8c%96%e6%8e%98" rel="category tag">数据挖掘</a>、<a href="http://www.52nlp.cn/category/%e7%bb%9f%e8%ae%a1%e5%ad%a6" rel="category tag">统计学</a>分类，被贴了 <a href="http://www.52nlp.cn/tag/a-b%e6%b5%8b%e8%af%95" rel="tag">A/B测试</a>、<a href="http://www.52nlp.cn/tag/%e6%95%b0%e5%ad%a6%e5%8e%9f%e7%90%86" rel="tag">数学原理</a>、<a href="http://www.52nlp.cn/tag/%e7%bb%9f%e8%ae%a1%e5%ad%a6" rel="tag">统计学</a>、<a href="http://www.52nlp.cn/tag/%e7%bb%9f%e8%ae%a1%e5%ad%a6%e4%b9%a0" rel="tag">统计学习</a> 标签。<span class="by-author">作者是<span class="author vcard"><a class="url fn n" href="http://www.52nlp.cn/author/chenyunwen" title="查看所有由recommender发布的文章" rel="author">recommender</a></span>。</span>								</footer><!-- .entry-meta -->
+	</article><!-- #post -->
+
+				<nav class="nav-single">
+					<h3 class="assistive-text">文章导航</h3>
+					<span class="nav-previous"><a href="http://www.52nlp.cn/andrew-ng-%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0%e5%85%ac%e5%bc%80%e8%af%be%e7%b3%bb%e5%88%97%e7%ac%ac%e4%ba%94%e9%97%a8%e8%af%be%e7%a8%8b%e5%ba%8f%e5%88%97%e6%a8%a1%e5%9e%8b%e5%bc%80%e8%af%be" rel="prev"><span class="meta-nav">←</span> Andrew Ng 深度学习公开课系列第五门课程序列模型开课</a></span>
+					<span class="nav-next"><a href="http://www.52nlp.cn/coursera%e4%b8%8a%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84-%e7%ae%97%e6%b3%95%e8%af%be%e7%a8%8b-%e7%ae%97%e6%b3%95%e5%85%ac%e5%bc%80%e8%af%be-%e6%b1%87%e6%80%bb%e6%8e%a8%e8%8d%90" rel="next">Coursera上数据结构 &amp; 算法课程（公开课）汇总推荐 <span class="meta-nav">→</span></a></span>
+				</nav><!-- .nav-single -->
+
+				
+<div id="comments" class="comments-area">
+
+	
+			<h2 class="comments-title">
+			《<span>A/B测试的数学原理与深入理解（达观数据 陈运文）</span>》上有1条评论		</h2>
+
+		<ol class="commentlist">
+					<li class="comment even thread-even depth-1" id="li-comment-275499">
+		<article id="comment-275499" class="comment">
+			<header class="comment-meta comment-author vcard">
+				<cite><b class="fn">何春光</b> </cite><a href="http://www.52nlp.cn/abceshi#comment-275499"><time datetime="2018-03-05T15:28:29+00:00">2018年03月5号15:28</time></a>				</header><!-- .comment-meta -->
+
+				
+				<section class="comment-content comment">
+				<p>请问如果数据一开始不符合正态分布怎么办呢？</p>
+<p class="thdrpy">[<a href="javascript:void(0)" onclick="movecfm(event,275499,1,&#39;何春光&#39;);">回复</a>]</p>								</section><!-- .comment-content -->
+
+				<div class="reply">
+								</div><!-- .reply -->
+			</article><!-- #comment-## -->
+		</li><!-- #comment-## -->
+		</ol><!-- .commentlist -->
+
+		
+		
+	
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">发表评论 <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://www.52nlp.cn/abceshi#respond" style="display:none;">取消回复</a></small></h3>			<form action="http://www.52nlp.cn/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+				<p class="comment-notes"><span id="email-notes">电子邮件地址不会被公开。</span> 必填项已用<span class="required">*</span>标注</p><p class="comment-form-comment"><label for="comment">评论</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required="required"></textarea></p><p class="comment-form-author"><label for="author">姓名 <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" required="required"></p>
+<p class="comment-form-email"><label for="email">电子邮件 <span class="required">*</span></label> <input id="email" name="email" type="text" value="" size="30" maxlength="100" aria-describedby="email-notes" required="required"></p>
+<p class="comment-form-url"><label for="url">站点</label> <input id="url" name="url" type="text" value="" size="30" maxlength="200"></p>
+<p class="comment-form-cookies-consent"><input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes"><label for="wp-comment-cookies-consent">Save my name, email, and website in this browser for the next time I comment.</label></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="发表评论"> <input type="hidden" name="comment_post_ID" value="10132" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="3f143fd900"></p><p style="display: none;"></p><p><input type="hidden" id="comment_reply_ID" name="comment_reply_ID" value="0"><input type="hidden" id="comment_reply_dp" name="comment_reply_dp" value="0"></p><div id="cancel_reply" style="display:none;"><a href="javascript:void(0)" onclick="movecfm(null,0,1,null);" style="color:red;">点击取消回复</a></div><script type="text/javascript">
+/* <![CDATA[ */
+var commentformid = "commentform";
+var USERINFO = false;
+var atreply = "none";
+/* ]]> */
+</script>
+<script type="text/javascript" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/wp-thread-comment.js.php"></script>
+			<input type="hidden" id="ak_js" name="ak_js" value="1533731952645"></form>
+			</div><!-- #respond -->
+	
+</div><!-- #comments .comments-area -->
+
+			
+		</div><!-- #content -->
+	</div><!-- #primary -->
+
+
+			<div id="secondary" class="widget-area" role="complementary">
+			<aside id="text-5" class="widget widget_text"><h3 class="widget-title">关注我们的微信公众号</h3>			<div class="textwidget"><a href="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/qrcode_for_gh_5034e4edc067_430-300x300.jpg"><img class="size-medium wp-image-85" alt="NLPJob" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/qrcode_for_gh_5034e4edc067_430-300x300.jpg" width="300" height="300"></a> </div>
+		</aside><aside id="search-3" class="widget widget_search"><h3 class="widget-title">站内搜索</h3><form role="search" method="get" id="searchform" class="searchform" action="http://www.52nlp.cn/">
+				<div>
+					<label class="screen-reader-text" for="s">搜索：</label>
+					<input type="text" value="" name="s" id="s">
+					<input type="submit" id="searchsubmit" value="搜索">
+				</div>
+			</form></aside><aside id="categories-309398092" class="widget widget_categories"><h3 class="widget-title">分类目录</h3>		<ul>
+	<li class="cat-item cat-item-72"><a href="http://www.52nlp.cn/category/mit-nlp" title="麻省理工学院开放式课程&quot;自然语言处理“的相关翻译文章">MIT自然语言处理</a>
+</li>
+	<li class="cat-item cat-item-976"><a href="http://www.52nlp.cn/category/pattern-recognition-and-machine-learning-2">PRML</a>
+</li>
+	<li class="cat-item cat-item-469"><a href="http://www.52nlp.cn/category/topic-model">Topic Model</a>
+</li>
+	<li class="cat-item cat-item-87"><a href="http://www.52nlp.cn/category/wordpress">wordpress</a>
+</li>
+	<li class="cat-item cat-item-1565"><a href="http://www.52nlp.cn/category/%e4%b8%93%e5%88%a9%e6%8c%96%e6%8e%98">专利挖掘</a>
+</li>
+	<li class="cat-item cat-item-317"><a href="http://www.52nlp.cn/category/%e4%b8%93%e9%a2%98">专题</a>
+</li>
+	<li class="cat-item cat-item-263"><a href="http://www.52nlp.cn/category/chinese-information-processing">中文信息处理</a>
+</li>
+	<li class="cat-item cat-item-62"><a href="http://www.52nlp.cn/category/word-segmentation">中文分词</a>
+</li>
+	<li class="cat-item cat-item-1490"><a href="http://www.52nlp.cn/category/%e5%85%ac%e5%bc%80%e8%af%be" title="公开课 &amp; 课程">公开课</a>
+</li>
+	<li class="cat-item cat-item-420"><a href="http://www.52nlp.cn/category/%e5%b9%b6%e8%a1%8c%e7%ae%97%e6%b3%95">并行算法</a>
+</li>
+	<li class="cat-item cat-item-268"><a href="http://www.52nlp.cn/category/%e6%8b%9b%e8%81%98">招聘</a>
+</li>
+	<li class="cat-item cat-item-560"><a href="http://www.52nlp.cn/category/%e6%8e%a8%e8%8d%90%e7%b3%bb%e7%bb%9f">推荐系统</a>
+</li>
+	<li class="cat-item cat-item-354"><a href="http://www.52nlp.cn/category/%e6%95%b0%e6%8d%ae%e6%8c%96%e6%8e%98">数据挖掘</a>
+</li>
+	<li class="cat-item cat-item-241"><a href="http://www.52nlp.cn/category/text-classification">文本分类</a>
+</li>
+	<li class="cat-item cat-item-1149"><a href="http://www.52nlp.cn/category/wen-ben-chu-li-yan-shi-xi-tong">文本处理演示系统</a>
+</li>
+	<li class="cat-item cat-item-193"><a href="http://www.52nlp.cn/category/maximum-entropy-model">最大熵模型</a>
+</li>
+	<li class="cat-item cat-item-344"><a href="http://www.52nlp.cn/category/%e6%9c%ba%e5%99%a8%e5%ad%a6%e4%b9%a0">机器学习</a>
+</li>
+	<li class="cat-item cat-item-1"><a href="http://www.52nlp.cn/category/machine-translation">机器翻译</a>
+</li>
+	<li class="cat-item cat-item-195"><a href="http://www.52nlp.cn/category/%e6%9d%a1%e4%bb%b6%e9%9a%8f%e6%9c%ba%e5%9c%ba">条件随机场</a>
+</li>
+	<li class="cat-item cat-item-153"><a href="http://www.52nlp.cn/category/tagging">标注</a>
+</li>
+	<li class="cat-item cat-item-1153"><a href="http://www.52nlp.cn/category/%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0">深度学习</a>
+</li>
+	<li class="cat-item cat-item-885"><a href="http://www.52nlp.cn/category/%e7%a7%91%e5%ad%a6%e8%ae%a1%e7%ae%97">科学计算</a>
+</li>
+	<li class="cat-item cat-item-538"><a href="http://www.52nlp.cn/category/%e7%bb%9f%e8%ae%a1%e5%ad%a6">统计学</a>
+</li>
+	<li class="cat-item cat-item-126"><a href="http://www.52nlp.cn/category/translation-model">翻译模型</a>
+</li>
+	<li class="cat-item cat-item-51"><a href="http://www.52nlp.cn/category/nlp">自然语言处理</a>
+</li>
+	<li class="cat-item cat-item-106"><a href="http://www.52nlp.cn/category/computational-linguistics">计算语言学</a>
+</li>
+	<li class="cat-item cat-item-22"><a href="http://www.52nlp.cn/category/dictionary">词典</a>
+</li>
+	<li class="cat-item cat-item-221"><a href="http://www.52nlp.cn/category/semantics">语义学</a>
+</li>
+	<li class="cat-item cat-item-1121"><a href="http://www.52nlp.cn/category/%e8%af%ad%e4%b9%89%e7%9b%b8%e4%bc%bc%e5%ba%a6">语义相似度</a>
+</li>
+	<li class="cat-item cat-item-161"><a href="http://www.52nlp.cn/category/semantic-web">语义网</a>
+</li>
+	<li class="cat-item cat-item-37"><a href="http://www.52nlp.cn/category/corpus">语料库</a>
+</li>
+	<li class="cat-item cat-item-86"><a href="http://www.52nlp.cn/category/language-model">语言模型</a>
+</li>
+	<li class="cat-item cat-item-156"><a href="http://www.52nlp.cn/category/speech-recognition">语音识别</a>
+</li>
+	<li class="cat-item cat-item-314"><a href="http://www.52nlp.cn/category/%e8%b4%9d%e5%8f%b6%e6%96%af%e6%a8%a1%e5%9e%8b">贝叶斯模型</a>
+</li>
+	<li class="cat-item cat-item-110"><a href="http://www.52nlp.cn/category/reprint">转载</a>
+</li>
+	<li class="cat-item cat-item-451"><a href="http://www.52nlp.cn/category/%e9%97%ae%e7%ad%94%e7%b3%bb%e7%bb%9f">问答系统</a>
+</li>
+	<li class="cat-item cat-item-3"><a href="http://www.52nlp.cn/category/informal-essay">随笔</a>
+</li>
+	<li class="cat-item cat-item-60"><a href="http://www.52nlp.cn/category/hidden-markov-model">隐马尔科夫模型</a>
+</li>
+		</ul>
+</aside>		<aside id="recent-posts-2" class="widget widget_recent_entries">		<h3 class="widget-title">最新文章</h3>		<ul>
+											<li>
+					<a href="http://www.52nlp.cn/%e4%b8%93%e5%88%a9%e6%96%87%e6%9c%ac%e6%95%b0%e6%8d%ae%e6%8c%96%e6%8e%98%e4%b9%8baipatent">专利文本数据挖掘之AIpatent</a>
+									</li>
+											<li>
+					<a href="http://www.52nlp.cn/%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0%e6%9c%8d%e5%8a%a1%e5%99%a8-1080ti-ubuntu16-04-cuda9-2-cudnn7-1-tensorflow-keras">从零开始搭建深度学习服务器: 1080TI四卡并行（Ubuntu16.04+CUDA9.2+cuDNN7.1+TensorFlow+Keras）</a>
+									</li>
+											<li>
+					<a href="http://www.52nlp.cn/ai-challenger-2017-%e5%a5%87%e9%81%87%e8%ae%b0">AI Challenger 2017 奇遇记</a>
+									</li>
+											<li>
+					<a href="http://www.52nlp.cn/coursera%e4%b8%8a%e6%95%b0%e5%ad%a6%e8%af%be%e7%a8%8b-%e6%95%b0%e5%ad%a6%e5%85%ac%e5%bc%80%e8%af%be-%e6%b1%87%e6%80%bb%e6%8e%a8%e8%8d%90">Coursera上数学类相关课程（公开课）汇总推荐</a>
+									</li>
+											<li>
+					<a href="http://www.52nlp.cn/%e7%94%b5%e4%bf%a1%e8%bf%90%e8%90%a5%e5%95%86%e5%8a%ab%e6%8c%81%e4%bd%95%e6%97%b6%e4%bc%91">电信运营商劫持何时休</a>
+									</li>
+											<li>
+					<a href="http://www.52nlp.cn/coursera%e4%b8%8a%e5%8d%9a%e5%bc%88%e8%ae%ba%e8%af%be%e7%a8%8b-%e5%8d%9a%e5%bc%88%e8%ae%ba%e5%85%ac%e5%bc%80%e8%af%be-game-theory-%e6%b1%87%e6%80%bb%e6%8e%a8%e8%8d%90">Coursera上博弈论相关课程（公开课）汇总推荐</a>
+									</li>
+											<li>
+					<a href="http://www.52nlp.cn/%e6%8e%a8%e8%8d%90nlpir%e5%a4%a7%e6%95%b0%e6%8d%ae%e8%af%ad%e4%b9%89%e6%99%ba%e8%83%bd%e5%88%86%e6%9e%90%e5%b9%b3%e5%8f%b0">推荐NLPIR大数据语义智能分析平台</a>
+									</li>
+											<li>
+					<a href="http://www.52nlp.cn/juzhenfenjiedatagrand">推荐系统中的矩阵分解技术（达观数据  周颢钰）</a>
+									</li>
+											<li>
+					<a href="http://www.52nlp.cn/coursera%e4%b8%8a%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84-%e7%ae%97%e6%b3%95%e8%af%be%e7%a8%8b-%e7%ae%97%e6%b3%95%e5%85%ac%e5%bc%80%e8%af%be-%e6%b1%87%e6%80%bb%e6%8e%a8%e8%8d%90">Coursera上数据结构 &amp; 算法课程（公开课）汇总推荐</a>
+									</li>
+											<li>
+					<a href="http://www.52nlp.cn/abceshi">A/B测试的数学原理与深入理解（达观数据 陈运文）</a>
+									</li>
+					</ul>
+		</aside><aside id="recentcomments" class="widget widget_recentcomments"><h3 class="widget-title">最近评论</h3><ul style="cursor: auto;"><li id="rc-comment-278659" class="rc-item rc-comment rc-clearfix"><div class="rc-info"><a class="rc-reviewer" rel="nofollow" href="http://www.52nlp.cn/hmm-learn-best-practices-five-forward-algorithm-3#comment-278659" title="HMM学习最佳范例五：前向算法3">beifeng600</a></div><div class="rc-timestamp"></div><div class="rc-excerpt">然后在每个时间点，t=2，<span class="rc-ellipsis">...</span></div></li><li id="rc-comment-278653" class="rc-item rc-comment rc-clearfix"><div class="rc-info"><a class="rc-reviewer" rel="nofollow" href="http://www.52nlp.cn/%e5%a6%82%e4%bd%95%e8%ae%a1%e7%ae%97%e4%b8%a4%e4%b8%aa%e6%96%87%e6%a1%a3%e7%9a%84%e7%9b%b8%e4%bc%bc%e5%ba%a6%e4%b8%89#comment-278653" title="如何计算两个文档的相似度（三）">52nlp</a></div><div class="rc-timestamp"></div><div class="rc-excerpt">将两个文本映射到向量空间中<span class="rc-ellipsis">...</span></div></li><li id="rc-comment-278652" class="rc-item rc-comment rc-clearfix"><div class="rc-info"><a class="rc-reviewer" rel="nofollow" href="http://www.52nlp.cn/ai-challenger-2017-%e5%a5%87%e9%81%87%e8%ae%b0#comment-278652" title="AI Challenger 2017 奇遇记">52nlp</a></div><div class="rc-timestamp"></div><div class="rc-excerpt">可以去看相关工具官方给得一<span class="rc-ellipsis">...</span></div></li><li id="rc-comment-278651" class="rc-item rc-comment rc-clearfix"><div class="rc-info"><a class="rc-reviewer" rel="nofollow" href="http://www.52nlp.cn/ai-challenger-2017-%e5%a5%87%e9%81%87%e8%ae%b0#comment-278651" title="AI Challenger 2017 奇遇记">yangyaofei</a></div><div class="rc-timestamp"></div><div class="rc-excerpt">请问能写一些详细的怎么用的<span class="rc-ellipsis">...</span></div></li><li id="rc-comment-278646" class="rc-item rc-comment rc-clearfix"><div class="rc-info"><a class="rc-reviewer" rel="nofollow" href="http://www.52nlp.cn/%e5%a6%82%e4%bd%95%e8%ae%a1%e7%ae%97%e4%b8%a4%e4%b8%aa%e6%96%87%e6%a1%a3%e7%9a%84%e7%9b%b8%e4%bc%bc%e5%ba%a6%e4%b8%89#comment-278646" title="如何计算两个文档的相似度（三）">pengyulong</a></div><div class="rc-timestamp"></div><div class="rc-excerpt">您好，这篇文章写得很详细，<span class="rc-ellipsis">...</span></div></li><li id="rc-comment-278621" class="rc-item rc-comment rc-clearfix"><div class="rc-info"><a class="rc-reviewer" rel="nofollow" href="http://www.52nlp.cn/lda-math-%e6%b1%87%e6%80%bb-lda%e6%95%b0%e5%ad%a6%e5%85%ab%e5%8d%a6#comment-278621" title="LDA-math-汇总 LDA数学八卦">xiaowei</a></div><div class="rc-timestamp"></div><div class="rc-excerpt">非常感谢您的分享，太难得这<span class="rc-ellipsis">...</span></div></li><li id="rc-comment-278545" class="rc-item rc-comment rc-clearfix"><div class="rc-info"><a class="rc-reviewer" rel="nofollow" href="http://www.52nlp.cn/%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0%e4%b8%bb%e6%9c%ba%e6%94%92%e6%9c%ba%e5%b0%8f%e8%ae%b0#comment-278545" title="深度学习主机攒机小记">yangyaofei</a></div><div class="rc-timestamp"></div><div class="rc-excerpt">今天也研究了一下午,全部下<span class="rc-ellipsis">...</span></div></li><li id="rc-comment-278490" class="rc-item rc-comment rc-clearfix"><div class="rc-info"><a class="rc-reviewer" rel="nofollow" href="http://www.52nlp.cn/fasttext#comment-278490" title="fastText原理及实践（达观数据王江）">lrjocean</a></div><div class="rc-timestamp"></div><div class="rc-excerpt">word2vec的输入不是<span class="rc-ellipsis">...</span></div></li><li id="rc-comment-278476" class="rc-item rc-comment rc-clearfix"><div class="rc-info"><a class="rc-reviewer" rel="nofollow" href="http://www.52nlp.cn/darts-double-array-trie-system-%e7%bf%bb%e8%af%91%e6%96%87%e6%a1%a3#comment-278476" title="Darts: Double-ARray Trie System  翻译文档">天志鹏飞</a></div><div class="rc-timestamp"></div><div class="rc-excerpt">首先说下下面的那个，那个应<span class="rc-ellipsis">...</span></div></li><li id="rc-comment-278350" class="rc-item rc-comment rc-clearfix"><div class="rc-info"><a class="rc-reviewer" rel="nofollow" href="http://www.52nlp.cn/hmm-learn-best-practices-four-hidden-markov-models#comment-278350" title="HMM学习最佳范例四：隐马尔科夫模型">askr</a></div><div class="rc-timestamp"></div><div class="rc-excerpt">之前看HMM和MM的解释一<span class="rc-ellipsis">...</span></div></li></ul></aside><aside id="archives-3" class="widget widget_archive"><h3 class="widget-title">文章归档</h3>		<ul>
+			<li><a href="http://www.52nlp.cn/2018/07">2018年七月</a></li>
+	<li><a href="http://www.52nlp.cn/2018/06">2018年六月</a></li>
+	<li><a href="http://www.52nlp.cn/2018/05">2018年五月</a></li>
+	<li><a href="http://www.52nlp.cn/2018/04">2018年四月</a></li>
+	<li><a href="http://www.52nlp.cn/2018/03">2018年三月</a></li>
+	<li><a href="http://www.52nlp.cn/2018/02">2018年二月</a></li>
+	<li><a href="http://www.52nlp.cn/2018/01">2018年一月</a></li>
+	<li><a href="http://www.52nlp.cn/2017/12">2017年十二月</a></li>
+	<li><a href="http://www.52nlp.cn/2017/11">2017年十一月</a></li>
+	<li><a href="http://www.52nlp.cn/2017/10">2017年十月</a></li>
+	<li><a href="http://www.52nlp.cn/2017/09">2017年九月</a></li>
+	<li><a href="http://www.52nlp.cn/2017/08">2017年八月</a></li>
+	<li><a href="http://www.52nlp.cn/2017/07">2017年七月</a></li>
+	<li><a href="http://www.52nlp.cn/2017/04">2017年四月</a></li>
+	<li><a href="http://www.52nlp.cn/2016/11">2016年十一月</a></li>
+	<li><a href="http://www.52nlp.cn/2016/09">2016年九月</a></li>
+	<li><a href="http://www.52nlp.cn/2016/07">2016年七月</a></li>
+	<li><a href="http://www.52nlp.cn/2016/06">2016年六月</a></li>
+	<li><a href="http://www.52nlp.cn/2016/04">2016年四月</a></li>
+	<li><a href="http://www.52nlp.cn/2015/12">2015年十二月</a></li>
+	<li><a href="http://www.52nlp.cn/2015/11">2015年十一月</a></li>
+	<li><a href="http://www.52nlp.cn/2015/09">2015年九月</a></li>
+	<li><a href="http://www.52nlp.cn/2015/08">2015年八月</a></li>
+	<li><a href="http://www.52nlp.cn/2015/07">2015年七月</a></li>
+	<li><a href="http://www.52nlp.cn/2015/06">2015年六月</a></li>
+	<li><a href="http://www.52nlp.cn/2015/05">2015年五月</a></li>
+	<li><a href="http://www.52nlp.cn/2015/04">2015年四月</a></li>
+	<li><a href="http://www.52nlp.cn/2015/03">2015年三月</a></li>
+	<li><a href="http://www.52nlp.cn/2015/01">2015年一月</a></li>
+	<li><a href="http://www.52nlp.cn/2014/12">2014年十二月</a></li>
+	<li><a href="http://www.52nlp.cn/2014/11">2014年十一月</a></li>
+	<li><a href="http://www.52nlp.cn/2014/09">2014年九月</a></li>
+	<li><a href="http://www.52nlp.cn/2014/07">2014年七月</a></li>
+	<li><a href="http://www.52nlp.cn/2014/06">2014年六月</a></li>
+	<li><a href="http://www.52nlp.cn/2014/05">2014年五月</a></li>
+	<li><a href="http://www.52nlp.cn/2014/04">2014年四月</a></li>
+	<li><a href="http://www.52nlp.cn/2014/01">2014年一月</a></li>
+	<li><a href="http://www.52nlp.cn/2013/12">2013年十二月</a></li>
+	<li><a href="http://www.52nlp.cn/2013/06">2013年六月</a></li>
+	<li><a href="http://www.52nlp.cn/2013/05">2013年五月</a></li>
+	<li><a href="http://www.52nlp.cn/2013/04">2013年四月</a></li>
+	<li><a href="http://www.52nlp.cn/2013/03">2013年三月</a></li>
+	<li><a href="http://www.52nlp.cn/2013/02">2013年二月</a></li>
+	<li><a href="http://www.52nlp.cn/2013/01">2013年一月</a></li>
+	<li><a href="http://www.52nlp.cn/2012/12">2012年十二月</a></li>
+	<li><a href="http://www.52nlp.cn/2012/11">2012年十一月</a></li>
+	<li><a href="http://www.52nlp.cn/2012/10">2012年十月</a></li>
+	<li><a href="http://www.52nlp.cn/2012/09">2012年九月</a></li>
+	<li><a href="http://www.52nlp.cn/2012/08">2012年八月</a></li>
+	<li><a href="http://www.52nlp.cn/2012/07">2012年七月</a></li>
+	<li><a href="http://www.52nlp.cn/2012/06">2012年六月</a></li>
+	<li><a href="http://www.52nlp.cn/2012/05">2012年五月</a></li>
+	<li><a href="http://www.52nlp.cn/2012/04">2012年四月</a></li>
+	<li><a href="http://www.52nlp.cn/2012/03">2012年三月</a></li>
+	<li><a href="http://www.52nlp.cn/2012/01">2012年一月</a></li>
+	<li><a href="http://www.52nlp.cn/2011/12">2011年十二月</a></li>
+	<li><a href="http://www.52nlp.cn/2011/11">2011年十一月</a></li>
+	<li><a href="http://www.52nlp.cn/2011/10">2011年十月</a></li>
+	<li><a href="http://www.52nlp.cn/2011/09">2011年九月</a></li>
+	<li><a href="http://www.52nlp.cn/2011/08">2011年八月</a></li>
+	<li><a href="http://www.52nlp.cn/2011/07">2011年七月</a></li>
+	<li><a href="http://www.52nlp.cn/2011/06">2011年六月</a></li>
+	<li><a href="http://www.52nlp.cn/2011/05">2011年五月</a></li>
+	<li><a href="http://www.52nlp.cn/2011/04">2011年四月</a></li>
+	<li><a href="http://www.52nlp.cn/2011/03">2011年三月</a></li>
+	<li><a href="http://www.52nlp.cn/2011/02">2011年二月</a></li>
+	<li><a href="http://www.52nlp.cn/2011/01">2011年一月</a></li>
+	<li><a href="http://www.52nlp.cn/2010/12">2010年十二月</a></li>
+	<li><a href="http://www.52nlp.cn/2010/11">2010年十一月</a></li>
+	<li><a href="http://www.52nlp.cn/2010/10">2010年十月</a></li>
+	<li><a href="http://www.52nlp.cn/2010/09">2010年九月</a></li>
+	<li><a href="http://www.52nlp.cn/2010/08">2010年八月</a></li>
+	<li><a href="http://www.52nlp.cn/2010/07">2010年七月</a></li>
+	<li><a href="http://www.52nlp.cn/2010/06">2010年六月</a></li>
+	<li><a href="http://www.52nlp.cn/2010/05">2010年五月</a></li>
+	<li><a href="http://www.52nlp.cn/2010/04">2010年四月</a></li>
+	<li><a href="http://www.52nlp.cn/2010/03">2010年三月</a></li>
+	<li><a href="http://www.52nlp.cn/2010/02">2010年二月</a></li>
+	<li><a href="http://www.52nlp.cn/2010/01">2010年一月</a></li>
+	<li><a href="http://www.52nlp.cn/2009/12">2009年十二月</a></li>
+	<li><a href="http://www.52nlp.cn/2009/11">2009年十一月</a></li>
+	<li><a href="http://www.52nlp.cn/2009/10">2009年十月</a></li>
+	<li><a href="http://www.52nlp.cn/2009/09">2009年九月</a></li>
+	<li><a href="http://www.52nlp.cn/2009/08">2009年八月</a></li>
+	<li><a href="http://www.52nlp.cn/2009/07">2009年七月</a></li>
+	<li><a href="http://www.52nlp.cn/2009/06">2009年六月</a></li>
+	<li><a href="http://www.52nlp.cn/2009/05">2009年五月</a></li>
+	<li><a href="http://www.52nlp.cn/2009/04">2009年四月</a></li>
+	<li><a href="http://www.52nlp.cn/2009/03">2009年三月</a></li>
+	<li><a href="http://www.52nlp.cn/2009/02">2009年二月</a></li>
+	<li><a href="http://www.52nlp.cn/2009/01">2009年一月</a></li>
+	<li><a href="http://www.52nlp.cn/2008/12">2008年十二月</a></li>
+		</ul>
+		</aside><aside id="buffercode_fl_widget_info-2" class="widget buffercode_fl_widget_info"><h3 class="widget-title"></h3>				<li style="list-style-type:none;">
+					<a href="http://textminingonline.com/" target="_blank">Text Mining Online					</a>
+				</li>
+							<li style="list-style-type:none;">
+					<a href="http://textanalysisonline.com/" target="_blank">Text Analysis Online					</a>
+				</li>
+							<li style="list-style-type:none;">
+					<a href="http://textprocessing.org/" target="_blank">Text Processing					</a>
+				</li>
+							<li style="list-style-type:none;">
+					<a href="http://keywordextraction.net/" target="_blank">Keyword Extraction					</a>
+				</li>
+							<li style="list-style-type:none;">
+					<a href="http://textsummarization.net/" target="_blank">Text Summarization					</a>
+				</li>
+			</aside><aside id="buffercode_fl_widget_info-3" class="widget buffercode_fl_widget_info"><h3 class="widget-title"></h3>				<li style="list-style-type:none;">
+					<a href="http://documentsimilarity.com/" target="_blank">Document Similarity					</a>
+				</li>
+							<li style="list-style-type:none;">
+					<a href="http://wordsimilarity.com/" target="_blank">Word Similarity					</a>
+				</li>
+			</aside>		</div><!-- #secondary -->
+		</div><!-- #main .wrapper -->
+	<footer id="colophon" role="contentinfo">
+		<div class="site-info">
+									<a href="https://cn.wordpress.org/" class="imprint" title="优雅的个人发布平台">
+				自豪地采用WordPress			</a>
+		</div><!-- .site-info -->
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+<!-- Matomo -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//piwik.52nlp.com/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code --><script>
+/* <![CDATA[ */
+var rcGlobal = {
+	serverUrl		:'http://www.52nlp.cn',
+	infoTemp		:'%REVIEWER% 在 %POST%',
+	loadingText		:'正在加载',
+	noCommentsText	:'没有任何评论',
+	newestText		:'&laquo; 最新的',
+	newerText		:'&laquo; 上一页',
+	olderText		:'下一页 &raquo;',
+	showContent		:'',
+	external		:'',
+	avatarSize		:'0',
+	avatarPosition	:'left',
+	anonymous		:'匿名'
+};
+/* ]]> */
+</script>
+<link rel="stylesheet" id="yarppRelatedCss-css" href="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/related.css" type="text/css" media="all">
+<script type="text/javascript" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/wp-recentcomments.js.下载"></script>
+<script type="text/javascript" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/wp-syntax.js.下载"></script>
+<script type="text/javascript" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/navigation.js.下载"></script>
+<script type="text/javascript" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/new-tab.min.js.下载"></script>
+<script type="text/javascript" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/wp-embed.min.js.下载"></script>
+<script async="async" type="text/javascript" src="./A_B测试的数学原理与深入理解（达观数据 陈运文） _ 我爱自然语言处理_files/form.js.下载"></script>
+
+
+</body></html>
